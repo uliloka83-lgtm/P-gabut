@@ -1,91 +1,123 @@
 <!doctype html>
-<html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Toko Kue</title>
 
+    <!-- External CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-
-
 <main class="container">
-<div style="flex:1">
-<div class="hero card">
-<div class="slides" id="heroSlide">
-<!-- slide img inserted here -->
-</div>
-<aside class="sidebar">
-<h3 id="heroHeadline">Kue Spesial Hari Ini</h3>
-<p id="heroSub">Pesan sebelum jam 15:00 untuk pengiriman hari yang sama.</p>
-<div class="card" style="margin-top:12px">
-<h4>Kontak</h4>
-<div id="contactPhone">-</div>
-<div id="contactEmail">-</div>
-</div>
-</aside>
-</div>
+    <div style="flex:1">
 
+        <!-- HERO SECTION -->
+        <div class="hero card">
+            <div class="slides" id="heroSlide">
+                <!-- slides inserted dynamically -->
+            </div>
 
-<section>
-<h3 style="padding:0 20px">Produk Kami</h3>
-<div class="products" id="productsGrid"></div>
-</section>
-</div>
+            <aside class="sidebar">
+                <h3 id="heroHeadline">Kue Spesial Hari Ini</h3>
+                <p id="heroSub">Pesan sebelum jam 15:00 untuk pengiriman hari yang sama.</p>
 
+                <div class="card" style="margin-top:12px">
+                    <h4>Kontak</h4>
+                    <div id="contactPhone">-</div>
+                    <div id="contactEmail">-</div>
+                </div>
+            </aside>
+        </div>
 
+        <!-- PRODUCT GRID -->
+        <section>
+            <h3 style="padding:0 20px">Produk Kami</h3>
+            <div class="products" id="productsGrid"></div>
+        </section>
+
+    </div>
 </main>
 
+<footer id="footerEl">
+    © <span id="year"></span> Toko Kue
+</footer>
 
-<footer id="footerEl">© <span id="year"></span> Toko Kue</footer>
-
-
+<!-- MAIN SCRIPT -->
 <script>
-// Load data.json from server
+// Load data.json
 async function loadSite(){
-try{
-const res = await fetch('data/data.json?t='+Date.now());
-if(!res.ok) throw new Error('fetch failed');
-const data = await res.json();
-applyData(data);
-}catch(e){
-// fallback: try localStorage
-console.warn('Fetch data failed, using localStorage fallback', e);
-const data = JSON.parse(localStorage.getItem('site_data')||'null');
-if(data) applyData(data);
-else console.error('No data available');
+    try{
+        const res = await fetch('data/data.json?t=' + Date.now());
+        if(!res.ok) throw new Error('fetch failed');
+        const data = await res.json();
+        applyData(data);
+    }catch(e){
+        console.warn('Fetch failed, using localStorage fallback', e);
+        const data = JSON.parse(localStorage.getItem('site_data') || 'null');
+        if(data) applyData(data);
+        else console.error('No data available');
+    }
 }
-}
-
 
 function applyData(d){
-document.getElementById('year').textContent = new Date().getFullYear();
-if(d.site){ document.getElementById('siteTitle').textContent = d.site.title||'Toko Kue'; document.getElementById('siteTag').textContent = d.site.tagline||''; if(d.site.logo){ document.getElementById('siteLogoEl').style.backgroundImage = 'url('+d.site.logo+')'; document.getElementById('siteLogoEl').textContent=''; }}
-if(d.hero){ document.getElementById('heroHeadline').textContent = d.hero.headline||''; document.getElementById('heroSub').textContent = d.hero.sub||''; }
-if(d.contact){ document.getElementById('contactPhone').textContent = d.contact.phone||''; document.getElementById('contactEmail').textContent = d.contact.email||''; }
-// slides
-const slides = d.slides || [];
-const slideEl = document.getElementById('heroSlide'); slideEl.innerHTML='';
-if(slides.length===0){ slideEl.innerHTML = '<img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1200&auto=format&fit=crop">'; }
-else{ slides.forEach(s=>{ const img = document.createElement('img'); img.src = s; slideEl.appendChild(img); }); }
-// products
-const pg = document.getElementById('productsGrid'); pg.innerHTML='';
-const prods = d.products || [];
-prods.forEach(p=>{
-const card = document.createElement('div'); card.className='card product';
-card.innerHTML = `<img src="${p.img||''}" alt=""><h4>${p.name}</h4><p>${p.desc||''}</p><div style='font-weight:700'>${p.price||''}</div>`;
-pg.appendChild(card);
-});
-// store locally as backup
-localStorage.setItem('site_data', JSON.stringify(d));
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Hero text
+    if(d.hero){
+        document.getElementById('heroHeadline').textContent = d.hero.headline || '';
+        document.getElementById('heroSub').textContent = d.hero.sub || '';
+    }
+
+    // Contact info
+    if(d.contact){
+        document.getElementById('contactPhone').textContent = d.contact.phone || '';
+        document.getElementById('contactEmail').textContent = d.contact.email || '';
+    }
+
+    // Slides
+    const slides = d.slides || [];
+    const slideEl = document.getElementById('heroSlide');
+    slideEl.innerHTML = '';
+
+    if(slides.length === 0){
+        slideEl.innerHTML = `
+            <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1200&auto=format&fit=crop">
+        `;
+    } else {
+        slides.forEach(src => {
+            const img = document.createElement('img');
+            img.src = src;
+            slideEl.appendChild(img);
+        });
+    }
+
+    // Products
+    const pg = document.getElementById('productsGrid');
+    pg.innerHTML = '';
+
+    const products = d.products || [];
+    products.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'card product';
+        card.innerHTML = `
+            <img src="${p.img || ''}" alt="">
+            <h4>${p.name}</h4>
+            <p>${p.desc || ''}</p>
+            <div style="font-weight:700">${p.price || ''}</div>
+        `;
+        pg.appendChild(card);
+    });
+
+    // Save locally
+    localStorage.setItem('site_data', JSON.stringify(d));
 }
-<link rel="stylesheet" href="style.css">
-  
 
 loadSite();
 </script>
+
 </body>
 </html>
