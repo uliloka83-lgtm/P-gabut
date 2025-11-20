@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Toko Kue - Demo (GitHub Pages friendly)</title>
+  <style>
+    :root{--accent:#d97706;--bg:#fffaf0;--card:#fff;--muted:#666}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:var(--bg);margin:0}
+    header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;background:linear-gradient(90deg,#ffe7c0,#fff);box-shadow:0 1px 8px rgba(0,0,0,0.06)}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:8px;overflow:hidden;background:linear-gradient(45deg,#ffb3a7,#ffd9a6);display:flex;align-items:center;justify-content:center;font-weight:700;color:#7a2b00}
+    nav a{margin:0 8px;color:#7a2b00;text-decoration:none;font-weight:600}
+    .actions{display:flex;gap:8px}
+    main{padding:28px;max-width:1100px;margin:0 auto}
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:20px;align-items:center}
+    .hero-card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.06)}
+    .slider{position:relative;overflow:hidden;border-radius:10px}
+    .slides{display:flex;transition:transform .5s ease}
+    .slides img{width:100%;height:320px;object-fit:cover}
+    .slider-controls{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 8px}
+    .btn{background:var(--accent);color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer}
+    .section{margin-top:22px}
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+    .product{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,0.04)}
+    .product img{width:100%;height:140px;object-fit:cover;border-radius:8px}
+    .floating{position:fixed;right:18px;bottom:18px;background:linear-gradient(45deg,#fff,#fffaf0);border-radius:12px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,0.12);width:300px}
+    .floating header{display:flex;justify-content:space-between;align-items:center}
+    .hidden{display:none}
+    .editable{outline:2px dashed rgba(200,140,60,0.15);padding:4px;border-radius:6px}
+    footer{padding:18px;text-align:center;color:var(--muted);font-size:14px;margin-top:30px}
+    input[type=file]{display:block}
+    .admin-badge{background:#111;color:#fff;padding:4px 8px;border-radius:6px;font-weight:700}
+    .form-row{display:flex;gap:8px;align-items:center;margin-top:8px}
+    .save-btn{background:#2d6a4f;color:#fff;padding:8px;border-radius:8px;border:none;cursor:pointer}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo" id="siteLogo" contenteditable="false">TK</div>
+      <div>
+        <div id="siteTitle" contenteditable="false" style="font-size:18px;font-weight:800">Toko Kue Manis</div>
+        <div id="siteTag" contenteditable="false" style="font-size:12px;color:var(--muted)">Kue rumahan, enak & fresh</div>
+      </div>
+    </div>
+    <nav>
+      <a href="#produk">Produk</a>
+      <a href="#kontak">Kontak</a>
+      <a href="#tentang">Tentang</a>
+    </nav>
+    <div class="actions">
+      <button class="btn" id="adminToggle">Admin Login</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-card">
+        <div class="slider" id="heroSlider">
+          <div class="slides" id="slides"></div>
+          <div class="slider-controls">
+            <button class="btn" id="prev">‹</button>
+            <button class="btn" id="next">›</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h2 id="heroHeadline" contenteditable="false">Kue Spesial Hari Ini</h2>
+          <p id="heroSub" contenteditable="false">Tersedia kue ulang tahun, kue kering, dan kue basah. Pesan sebelum jam 15:00 untuk pengiriman hari yang sama.</p>
+        </div>
+      </div>
+
+      <aside class="hero-card">
+        <h3>Menu Cepat</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          <button class="btn" onclick="scrollToSection('produk')">Lihat Produk</button>
+          <button class="btn" onclick="scrollToSection('kontak')">Kontak Kami</button>
+        </div>
+
+        <div class="section" id="configPanel">
+          <h4>Kontak</h4>
+          <div id="contactPhone" contenteditable="false">+62 812 3456 7890</div>
+          <div id="contactEmail" contenteditable="false">toko@example.com</div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="produk" class="section">
+      <h3>Produk</h3>
+      <div class="products-grid" id="productsGrid"></div>
+      <div style="margin-top:10px">
+        <button id="addProductBtn" class="btn hidden">Tambah Produk</button>
+      </div>
+    </section>
+
+    <section id="kontak" class="section">
+      <h3>Hubungi Kami</h3>
+      <p id="kontakText" contenteditable="false">Silakan hubungi melalui telepon, WhatsApp, atau email. Untuk pemesanan khusus, isi form pada jendela kontak.</p>
+    </section>
+
+    <section id="tentang" class="section">
+      <h3>Tentang Toko</h3>
+      <p id="aboutText" contenteditable="false">Toko kue rumahan yang membuat kue segar setiap pagi. Dibuat dengan cinta.</p>
+    </section>
+
+  </main>
+
+  <div class="floating" id="floatingWindow">
+    <header>
+      <strong>Jendela Cepat</strong>
+      <span id="adminBadge" class="admin-badge hidden">ADMIN</span>
+    </header>
+    <div style="margin-top:8px">
+      <div id="floatingContact">Pesan via WhatsApp: <a href="#" id="waLink">Klik</a></div>
+      <div class="form-row" id="adminControls" style="margin-top:10px;display:none">
+        <button class="save-btn" id="saveAllBtn">Simpan Perubahan</button>
+        <button class="btn" id="logoutBtn">Logout</button>
+      </div>
+      <div style="margin-top:10px;font-size:13px;color:var(--muted)">Mode demo: semua data tersimpan di browser (localStorage). Password admin: <strong>gustiulil</strong></div>
+    </div>
+  </div>
+
+  <footer>
+    © <span id="year">2025</span> Toko Kue Manis — Demo untuk GitHub Pages
+  </footer>
+
+  <!-- Admin Login Modal (simple) -->
+  <div id="loginModal" class="hidden" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4)">
+    <div style="background:white;padding:18px;border-radius:10px;width:320px;box-shadow:0 10px 40px rgba(0,0,0,0.25)">
+      <h3>Admin Login</h3>
+      <p>Masukkan password admin untuk mengaktifkan mode edit.</p>
+      <input type="password" id="adminPassword" placeholder="Password" style="width:100%;padding:8px;margin-top:8px" />
+      <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
+        <button id="cancelLogin" class="btn">Batal</button>
+        <button id="confirmLogin" class="btn">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden template for product editing -->
+  <template id="productTemplate">
+    <div class="product">
+      <div class="imageWrap">
+        <img src="" alt="produk" />
+      </div>
+      <h4 class="p-title" contenteditable="false"></h4>
+      <p class="p-desc" contenteditable="false" style="color:var(--muted)"></p>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <div class="price" contenteditable="false"></div>
+        <button class="btn orderBtn">Pesan</button>
+      </div>
+      <div class="admin-edit-zone hidden" style="margin-top:8px">
+        <label>Ganti Gambar: <input type="file" accept="image/*" class="imgInput" /></label>
+        <button class="btn saveProductBtn">Simpan Produk</button>
+        <button class="btn" onclick="this.closest('.admin-edit-zone').classList.add('hidden')">Sembunyikan</button>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    // ---------- Basic app state and helpers ----------
+    const ADMIN_PASSWORD = 'gustiulil'; // NOTE: client-side password is not secure. See note below.
+    let isAdmin = false;
+    const defaultSlides = [
+      'https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=1',
+      'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=2',
+      'https://images.unsplash.com/photo-1542038784456-1e0b9a9a5c6b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=3'
+    ];
+
+    // localStorage keys
+    const LS = {
+      slides: 'tk_slides',
+      products: 'tk_products',
+      site: 'tk_site'
+    };
+
+    function qs(sel, root=document) { return root.querySelector(sel); }
+    function qsa(sel, root=document) { return Array.from(root.querySelectorAll(sel)); }
+
+    // ---------- Slider ----------
+    const slidesEl = qs('#slides');
+    let slideIndex = 0;
+
+    function loadSlides(){
+      const saved = JSON.parse(localStorage.getItem(LS.slides) || 'null');
+      const slides = saved && saved.length ? saved : defaultSlides;
+      slidesEl.innerHTML = '';
+      slides.forEach(src=>{
+        const img = document.createElement('img'); img.src = src; slidesEl.appendChild(img);
+      });
+      slidesEl.style.width = (slides.length * 100) + '%';
+      updateSlideShow();
+    }
+
+    function updateSlideShow(){
+      const count = slidesEl.children.length;
+      slidesEl.style.transform = `translateX(-${(100/count) * slideIndex}%)`;
+    }
+
+    qs('#prev').addEventListener('click',()=>{ slideIndex = (slideIndex-1 + slidesEl.children.length)%slidesEl.children.length; updateSlideShow(); });
+    qs('#next').addEventListener('click',()=>{ slideIndex = (slideIndex+1)%slidesEl.children.length; updateSlideShow(); });
+
+    // ---------- Products ----------
+    function loadProducts(){
+      const raw = localStorage.getItem(LS.products);
+      let products = raw? JSON.parse(raw) : [
+        {id:1,title:'Cheesecake Strawberry',desc:'Lembut dan creamy',price:'Rp 85.000',img: defaultSlides[0]},
+        {id:2,title:'Brownies Panggang',desc:'Cokelat pekat',price:'Rp 60.000',img: defaultSlides[1]}
+      ];
+      renderProducts(products);
+    }
+
+    function renderProducts(products){
+      const grid = qs('#productsGrid'); grid.innerHTML='';
+      products.forEach(p=>{
+        const tpl = qs('#productTemplate').content.cloneNode(true);
+        const container = tpl.querySelector('.product');
+        container.dataset.id = p.id;
+        container.querySelector('img').src = p.img || '';
+        container.querySelector('.p-title').textContent = p.title;
+        container.querySelector('.p-desc').textContent = p.desc;
+        container.querySelector('.price').textContent = p.price;
+        // order button
+        tpl.querySelector('.orderBtn').addEventListener('click',()=>{ alert('Silakan hubungi kami untuk memesan: ' + qs('#contactPhone').textContent); });
+
+        // admin edit controls
+        const adminZone = container.querySelector('.admin-edit-zone');
+        const imgInput = adminZone.querySelector('.imgInput');
+        imgInput.addEventListener('change', (e)=>{
+          const file = e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = () => { container.querySelector('img').src = reader.result; };
+          reader.readAsDataURL(file);
+        });
+        adminZone.querySelector('.saveProductBtn').addEventListener('click',()=>{
+          // save changes to localStorage
+          const products = getProductsFromLS();
+          const idx = products.findIndex(x=>x.id==p.id);
+          if (idx===-1) return;
+          products[idx].title = container.querySelector('.p-title').textContent.trim();
+          products[idx].desc = container.querySelector('.p-desc').textContent.trim();
+          products[idx].price = container.querySelector('.price').textContent.trim();
+          products[idx].img = container.querySelector('img').src;
+          localStorage.setItem(LS.products, JSON.stringify(products));
+          alert('Produk disimpan');
+          toggleAdminMode(isAdmin);
+        });
+
+        grid.appendChild(tpl);
+      });
+
+      if (isAdmin) enableAdminProductEdits();
+    }
+
+    function getProductsFromLS(){
+      try{ return JSON.parse(localStorage.getItem(LS.products)) || []; }catch(e){ return []; }
+    }
+
+    // allow adding product
+    qs('#addProductBtn').addEventListener('click',()=>{
+      const products = getProductsFromLS();
+      const id = Date.now();
+      products.push({id, title:'Produk Baru',desc:'Deskripsi...',price:'Rp 0',img: ''});
+      localStorage.setItem(LS.products, JSON.stringify(products));
+      loadProducts();
+      toggleAdminMode(true);
+    });
+
+    // ---------- Admin handling ----------
+    qs('#adminToggle').addEventListener('click',()=>{ showLogin(true); });
+    qs('#cancelLogin').addEventListener('click',()=>{ showLogin(false); });
+    qs('#confirmLogin').addEventListener('click',()=>{
+      const val = qs('#adminPassword').value.trim();
+      if(val===ADMIN_PASSWORD){
+        isAdmin = true; localStorage.setItem('isAdmin_demo','1');
+        showLogin(false); toggleAdminMode(true); alert('Admin mode aktif');
+      } else {
+        alert('Password salah');
+      }
+      qs('#adminPassword').value='';
+    });
+
+    qs('#logoutBtn').addEventListener('click',()=>{ isAdmin=false; localStorage.removeItem('isAdmin_demo'); toggleAdminMode(false); });
+
+    function showLogin(show){ qs('#loginModal').classList.toggle('hidden', !show); }
+
+    function toggleAdminMode(on){
+      isAdmin = !!on;
+      qs('#adminBadge').classList.toggle('hidden', !on);
+      qs('#addProductBtn').classList.toggle('hidden', !on);
+      // make certain items contentEditable
+      ['#siteTitle','#siteTag','#heroHeadline','#heroSub','#contactPhone','#contactEmail','#kontakText','#aboutText'].forEach(sel=>{
+        const el = qs(sel); if(el){ el.contentEditable = on; el.classList.toggle('editable', on);} }
+      );
+      // show admin edit zone on each product
+      enableAdminProductEdits();
+      qs('#adminControls').style.display = on ? 'flex' : 'none';
+      qs('#adminToggle').textContent = on ? 'Mode Admin' : 'Admin Login';
+
+      if(on){
+        // allow logo image change by clicking
+        qs('#siteLogo').contentEditable = false; qs('#siteLogo').classList.add('editable');
+        qs('#siteLogo').addEventListener('click', changeLogo);
+      } else {
+        qs('#siteLogo').removeEventListener('click', changeLogo);
+        qs('#siteLogo').classList.remove('editable');
+      }
+    }
+
+    function enableAdminProductEdits(){
+      qsa('.product').forEach(pel=>{
+        const zone = pel.querySelector('.admin-edit-zone');
+        if(isAdmin){ pel.querySelector('.p-title').contentEditable = true; pel.querySelector('.p-desc').contentEditable = true; pel.querySelector('.price').contentEditable = true; zone.classList.remove('hidden'); }
+        else { pel.querySelector('.p-title').contentEditable = false; pel.querySelector('.p-desc').contentEditable = false; pel.querySelector('.price').contentEditable = false; zone.classList.add('hidden'); }
+      });
+    }
+
+    function changeLogo(){
+      if(!isAdmin) return;
+      const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
+      inp.onchange = ()=>{
+        const f = inp.files[0]; if(!f) return; const r = new FileReader(); r.onload = ()=>{ qs('#siteLogo').style.backgroundImage = `url(${r.result})`; qs('#siteLogo').textContent=''; saveSiteConfig(); }; r.readAsDataURL(f);
+      };
+      inp.click();
+    }
+
+    // Save site-wide config
+    qs('#saveAllBtn').addEventListener('click',()=>{ saveSiteConfig(); saveSlides(); saveProductsFromDOM(); alert('Semua disimpan ke localStorage'); });
+
+    function saveSiteConfig(){
+      const site = {
+        title: qs('#siteTitle').textContent.trim(),
+        tag: qs('#siteTag').textContent.trim(),
+        heroHeadline: qs('#heroHeadline').textContent.trim(),
+        heroSub: qs('#heroSub').textContent.trim(),
+        contactPhone: qs('#contactPhone').textContent.trim(),
+        contactEmail: qs('#contactEmail').textContent.trim(),
+        kontakText: qs('#kontakText').textContent.trim(),
+        aboutText: qs('#aboutText').textContent.trim(),
+        logoBg: qs('#siteLogo').style.backgroundImage || ''
+      };
+      localStorage.setItem(LS.site, JSON.stringify(site));
+    }
+
+    function saveSlides(){
+      const imgs = Array.from(slidesEl.querySelectorAll('img')).map(i=>i.src);
+      localStorage.setItem(LS.slides, JSON.stringify(imgs));
+    }
+
+    function saveProductsFromDOM(){
+      const products = qsa('.product').map(pel=>({ id: pel.dataset.id || Date.now(), title: pel.querySelector('.p-title').textContent.trim(), desc: pel.querySelector('.p-desc').textContent.trim(), price: pel.querySelector('.price').textContent.trim(), img: pel.querySelector('img').src }));
+      localStorage.setItem(LS.products, JSON.stringify(products));
+    }
+
+    // ---------- Load saved site config ----------
+    function loadSiteConfig(){
+      const saved = JSON.parse(localStorage.getItem(LS.site) || 'null');
+      if(!saved) return;
+      if(saved.title) qs('#siteTitle').textContent = saved.title;
+      if(saved.tag) qs('#siteTag').textContent = saved.tag;
+      if(saved.heroHeadline) qs('#heroHeadline').textContent = saved.heroHeadline;
+      if(saved.heroSub) qs('#heroSub').textContent = saved.heroSub;
+      if(saved.contactPhone) qs('#contactPhone').textContent = saved.contactPhone;
+      if(saved.contactEmail) qs('#contactEmail').textContent = saved.contactEmail;
+      if(saved.kontakText) qs('#kontakText').textContent = saved.kontakText;
+      if(saved.aboutText) qs('#aboutText').textContent = saved.aboutText;
+      if(saved.logoBg) qs('#siteLogo').style.backgroundImage = saved.logoBg;
+    }
+
+    // ---------- Utility ----------
+    function scrollToSection(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
+
+    // ---------- Initial load ----------
+    document.addEventListener('DOMContentLoaded',()=>{
+      loadSlides(); loadProducts(); loadSiteConfig();
+      // restore admin session if existed
+      if(localStorage.getItem('isAdmin_demo')){ isAdmin=true; toggleAdminMode(true); }
+      qs('#year').textContent = new Date().getFullYear();
+    });
+
+    // ---------- Misc: small auto-play for slider ----------
+    setInterval(()=>{ if(slidesEl.children.length>0){ slideIndex = (slideIndex+1)%slidesEl.children.length; updateSlideShow(); } }, 4500);
+
+    // ---------- Notes for user ----------
+    /*
+      CATATAN PENTING:
+      - Demo ini menyimpan semua data di browser (localStorage). Untuk produksi, simpan ke backend (server) dan autentikasi yang aman.
+      - Menyimpan password di kode klien (ADMIN_PASSWORD) tidak aman. Jika ingin benar-benar aman, buat server dengan endpoint autentikasi.
+      - File gambar disimpan sebagai data URL (base64) di localStorage pada demo ini.
+    */
+  </script>
+</body>
+  </html>
+  
