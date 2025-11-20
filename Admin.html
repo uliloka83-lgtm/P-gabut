@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Admin Panel</title>
+<style>
+    body{font-family:Arial;padding:20px;background:#f2f2f2;}
+    .card{background:white;padding:20px;border-radius:10px;max-width:400px;margin:auto;}
+    input,button{width:100%;padding:10px;margin:7px 0;}
+    .hidden{display:none;}
+    .product{background:#fff;padding:15px;border-radius:8px;margin:10px 0;}
+</style>
+</head>
+<body>
+
+<div id="loginBox" class="card">
+    <h2>Admin Login</h2>
+    <input type="password" id="adminPass" placeholder="Masukkan password admin">
+    <button onclick="checkLogin()">Login</button>
+</div>
+
+<div id="adminPanel" class="hidden">
+    <h2>Dashboard Admin</h2>
+    <button onclick="window.location='index.html'">⬅ Kembali ke website</button>
+    <hr><br>
+
+    <h3>Edit Informasi Website</h3>
+    <label>Judul Situs:</label>
+    <input id="siteTitleInput">
+
+    <label>Tagline:</label>
+    <input id="siteTagInput">
+
+    <button onclick="saveSiteInfo()">Simpan Informasi</button>
+
+    <hr>
+
+    <h3>Kelola Produk</h3>
+    <div id="productList"></div>
+
+    <h3>Tambah Produk Baru</h3>
+    <input id="newName" placeholder="Nama produk">
+    <input id="newPrice" placeholder="Harga">
+    <input id="newImg" type="file" accept="image/*">
+    <button onclick="addProduct()">Tambah</button>
+
+</div>
+
+<script>
+const ADMIN_PASSWORD = "gustiulil";
+
+// 🔐 LOGIN
+function checkLogin(){
+    const pw = document.getElementById("adminPass").value;
+    if(pw === ADMIN_PASSWORD){
+        document.getElementById("loginBox").classList.add("hidden");
+        document.getElementById("adminPanel").classList.remove("hidden");
+        loadData();
+    } else {
+        alert("Password salah!");
+    }
+}
+
+// 🔄 LOAD DATA
+function loadData(){
+    const siteTitle = localStorage.getItem("siteTitle") || "";
+    const siteTag = localStorage.getItem("siteTag") || "";
+
+    document.getElementById("siteTitleInput").value = siteTitle;
+    document.getElementById("siteTagInput").value = siteTag;
+
+    loadProducts();
+}
+
+// 💾 SIMPAN INFO WEBSITE
+function saveSiteInfo(){
+    localStorage.setItem("siteTitle", document.getElementById("siteTitleInput").value);
+    localStorage.setItem("siteTag", document.getElementById("siteTagInput").value);
+    alert("Informasi website berhasil disimpan!");
+}
+
+// 📦 PRODUK SECTION
+function loadProducts(){
+    const list = JSON.parse(localStorage.getItem("products") || "[]");
+    const box = document.getElementById("productList");
+    box.innerHTML = "";
+
+    list.forEach((p,i)=>{
+        box.innerHTML += `
+            <div class="product">
+                <label>Nama:</label>
+                <input id="name_${i}" value="${p.name}">
+
+                <label>Harga:</label>
+                <input id="price_${i}" value="${p.price}">
+
+                <label>Gambar:</label>
+                <img src="${p.img}" style="width:80px;display:block;margin:5px 0;">
+                <input type="file" id="img_${i}" accept="image/*">
+
+                <button onclick="saveProduct(${i})">Simpan</button>
+                <button onclick="deleteProduct(${i})" style="background:#e74c3c;color:white;">Hapus</button>
+            </div>
+        `;
+    });
+}
+
+// 💾 SIMPAN PRODUK
+function saveProduct(index){
+    const list = JSON.parse(localStorage.getItem("products") || "[]");
+    
+    const file = document.getElementById("img_"+index).files[0];
+
+    function update(imgURL){
+        list[index] = {
+            name: document.getElementById("name_"+index).value,
+            price: document.getElementById("price_"+index).value,
+            img: imgURL || list[index].img
+        };
+        localStorage.setItem("products", JSON.stringify(list));
+        loadProducts();
+        alert("Produk berhasil diupdate!");
+    }
+
+    if(file){
+        const reader = new FileReader();
+        reader.onload = e => update(e.target.result);
+        reader.readAsDataURL(file);
+    } else {
+        update(null);
+    }
+}
+
+// ➕ TAMBAH PRODUK
+function addProduct(){
+    const name = document.getElementById("newName").value;
+    const price = document.getElementById("newPrice").value;
+    const file = document.getElementById("newImg").files[0];
+
+    if(!name || !price || !file) return alert("Isi semua data!");
+
+    const reader = new FileReader();
+    reader.onload = function(e){
+        const list = JSON.parse(localStorage.getItem("products") || "[]");
+
+        list.push({ name, price, img: e.target.result });
+        localStorage.setItem("products", JSON.stringify(list));
+
+        loadProducts();
+        alert("Produk baru ditambahkan!");
+    };
+    reader.readAsDataURL(file);
+}
+
+// ❌ Hapus produk
+function deleteProduct(i){
+    if(!confirm("Hapus produk ini?")) return;
+    const list = JSON.parse(localStorage.getItem("products") || "[]");
+    list.splice(i,1);
+    localStorage.setItem("products", JSON.stringify(list));
+    loadProducts();
+}
+</script>
+
+</body>
+</html>
