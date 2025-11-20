@@ -1,0 +1,286 @@
+/* ===========================
+   GLOBAL STYLE
+   =========================== */
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    background:#f8f9fb;
+    color:#333;
+    line-height:1.5;
+}
+
+:root{
+    --primary:#ff6b81;
+    --primary-light:#ffbbc5;
+    --card:#ffffff;
+    --border:#e6e8ef;
+    --shadow:0 4px 14px rgba(0,0,0,0.08);
+    --muted:#777;
+}
+
+/* ===========================
+   HEADER
+   =========================== */
+
+header{
+    width:100%;
+    background:var(--card);
+    border-bottom:1px solid var(--border);
+    padding:16px 24px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    box-shadow:var(--shadow);
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+.logo{
+    width:58px;
+    height:58px;
+    background:var(--primary);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:22px;
+    font-weight:600;
+    background-size:cover;
+    background-position:center;
+}
+
+#siteTitle{
+    font-size:20px;
+    font-weight:700;
+}
+
+#siteTag{
+    font-size:13px;
+    color:var(--muted);
+}
+
+/* ===========================
+   LAYOUT
+   =========================== */
+
+.container{
+    display:flex;
+    max-width:1200px;
+    margin:auto;
+    padding:24px;
+}
+
+.hero{
+    display:flex;
+    background:var(--card);
+    border-radius:14px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+}
+
+.slides{
+    width:60%;
+    height:300px;
+    overflow:hidden;
+    position:relative;
+}
+
+.slides img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.sidebar{
+    width:40%;
+    padding:20px;
+}
+
+.sidebar h3{
+    font-size:22px;
+    margin-bottom:6px;
+}
+
+.sidebar p{
+    font-size:14px;
+    color:var(--muted);
+}
+
+.card{
+    background:var(--card);
+    border-radius:12px;
+    border:1px solid var(--border);
+    padding:16px;
+    box-shadow:var(--shadow);
+    margin-bottom:16px;
+}
+
+/* ===========================
+   PRODUCTS
+   =========================== */
+
+.products{
+    margin-top:12px;
+    padding:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+    gap:18px;
+}
+
+.product{
+    padding:0;
+    overflow:hidden;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.product:hover{
+    transform:translateY(-4px);
+}
+
+.product img{
+    width:100%;
+    height:160px;
+    object-fit:cover;
+}
+
+.product h4{
+    padding:12px 12px 0;
+    font-size:18px;
+}
+
+.product p{
+    padding:6px 12px;
+    font-size:14px;
+    color:var(--muted);
+}
+
+.product div{
+    padding:0 12px 12px;
+    color:var(--primary);
+}
+
+/* ===========================
+   FOOTER
+   =========================== */
+
+footer{
+    width:100%;
+    text-align:center;
+    padding:20px;
+    color:var(--muted);
+    font-size:14px;
+}
+
+/* ===========================
+   ADMIN PANEL (admin.html)
+   =========================== */
+
+.admin-wrapper{
+    display:flex;
+    max-width:1200px;
+    margin:auto;
+    padding:24px;
+    gap:20px;
+}
+
+.admin-panel{
+    flex:1;
+}
+
+aside{
+    width:340px;
+}
+
+.card input, .card textarea{
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    outline:none;
+    margin-top:4px;
+    font-size:14px;
+}
+
+.card textarea{
+    height:90px;
+    resize:none;
+}
+
+.btn{
+    background:var(--primary);
+    color:white;
+    padding:10px 16px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:8px;
+    font-size:14px;
+}
+
+.btn:hover{
+    background:#ff566c;
+}
+
+#slideThumbs img{
+    width:80px;
+    height:55px;
+    object-fit:cover;
+    border-radius:10px;
+    border:1px solid var(--border);
+}
+
+#prodList .prod-item{
+    background:#fff1f4;
+    border:1px solid #ffd1da;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:6px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+#prodList button{
+    background:#ff4d61;
+    border:none;
+    color:white;
+    padding:4px 8px;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+
+@media(max-width:900px){
+    .container, .admin-wrapper{
+        flex-direction:column;
+    }
+    aside{
+        width:100%;
+    }
+    .hero{
+        flex-direction:column;
+    }
+    .slides, .sidebar{
+        width:100%;
+    }
+}
+
+@media(max-width:600px){
+    header{
+        flex-direction:column;
+        text-align:center;
+    }
+}
