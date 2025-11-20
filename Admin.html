@@ -1,0 +1,66 @@
+<!doctype html>
+<input id="siteTitleInput" type="text">
+<label>Tagline</label>
+<input id="siteTagInput" type="text">
+<label>Logo</label>
+<input id="logoInput" type="file" accept="image/*">
+<img id="logoPreview" src="" alt="logo" style="height:60px;border-radius:8px;display:block;margin-top:8px;">
+</div>
+
+
+<div class="card" style="margin-top:12px">
+<h3>Hero</h3>
+<label>Headline</label>
+<input id="heroHeadlineInput" type="text">
+<label>Sub</label>
+<input id="heroSubInput" type="text">
+</div>
+
+
+<div class="card" style="margin-top:12px">
+<h3>Kontak & About</h3>
+<label>Telepon/WA</label>
+<input id="contactPhoneInput" type="text">
+<label>Email</label>
+<input id="contactEmailInput" type="text">
+<label>Tentang Toko</label>
+<textarea id="aboutInput"></textarea>
+</div>
+</div>
+
+
+<aside>
+<div class="card">
+<h3>Slider</h3>
+<input id="slideInput" type="file" accept="image/*">
+<button class="btn" id="addSlideBtn">Tambah Slide</button>
+<div id="slideThumbs" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"></div>
+</div>
+
+
+<div class="card" style="margin-top:12px">
+<h3>Produk</h3>
+<label>Nama</label>
+<input id="prodName" type="text">
+<label>Harga</label>
+<input id="prodPrice" type="text">
+<label>Gambar</label>
+<input id="prodImg" type="file" accept="image/*">
+<button class="btn" id="addProdBtn" style="margin-top:8px">Tambah Produk</button>
+<div id="prodList" style="margin-top:12px"></div>
+</div>
+
+
+<div class="card" style="margin-top:12px">
+<h3>Preview</h3>
+<iframe id="previewFrame" src="index.html" style="width:100%;height:360px;border:1px solid #e6eef8;border-radius:8px"></iframe>
+<button class="btn" id="refreshPreview" style="margin-top:8px">Refresh Preview</button>
+</div>
+</aside>
+</div>
+</div>
+
+
+<script src="admin.js"></script>
+</body>
+</html>
